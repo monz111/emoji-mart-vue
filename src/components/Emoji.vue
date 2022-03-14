@@ -10,9 +10,7 @@
     @mouseleave="onMouseLeave"
     @click="onClick"
   >
-    <span :class="view.cssClass" :style="view.cssStyle">{{
-      view.content
-    }}</span>
+    <img :src="this.imageUrl" width="40" />
   </component>
 </template>
 
@@ -40,6 +38,9 @@ export default {
         this.size,
       )
     },
+    imageUrl() {
+      return `https://cdnjs.cloudflare.com/ajax/libs/emoji-datasource-apple/7.0.2/img/apple/64/${this.emoji.unified}.png`
+    },
     sanitizedData() {
       return this.emojiObject._sanitized
     },
@@ -54,7 +55,6 @@ export default {
       }
     },
   },
-  created() {},
   methods: {
     onClick() {
       this.$emit('click', this.emojiObject)

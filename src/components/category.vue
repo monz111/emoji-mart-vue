@@ -24,14 +24,11 @@
         :key="emojiObject.id"
         :title="emojiView.title"
         class="emoji-mart-emoji"
-        :class="activeClass(emojiObject)"
         @mouseenter="emojiProps.onEnter(emojiView.getEmoji())"
         @mouseleave="emojiProps.onLeave(emojiView.getEmoji())"
         @click="emojiProps.onClick(emojiView.getEmoji())"
       >
-        <span :class="emojiView.cssClass" :style="emojiView.cssStyle">{{
-          emojiView.content
-        }}</span>
+         <img :src="imageUrl(emojiView.content)" width="27" height="27">
       </button>
     </template>
 
@@ -78,23 +75,6 @@ export default {
       required: true,
     },
   },
-  methods: {
-    activeClass: function(emojiObject) {
-      if (!this.emojiProps.selectedEmoji) {
-        return ''
-      }
-      if (!this.emojiProps.selectedEmojiCategory) {
-        return ''
-      }
-      if (
-        this.emojiProps.selectedEmoji.id == emojiObject.id &&
-        this.emojiProps.selectedEmojiCategory.id == this.id
-      ) {
-        return 'emoji-mart-emoji-selected'
-      }
-      return ''
-    },
-  },
   computed: {
     isVisible() {
       return !!this.emojis
@@ -107,7 +87,8 @@ export default {
     },
     emojiObjects() {
       return this.emojis.map((emoji) => {
-        let emojiObject = emoji
+        let emojiObject = this.emojiObject(emoji)
+        if (['♀️','♂️', '⚕️'].includes(emojiObject.native)) return
         let emojiView = new EmojiView(
           emoji,
           this.emojiProps.skin,
@@ -118,11 +99,25 @@ export default {
           this.emojiProps.emojiSize,
         )
         return { emojiObject, emojiView }
-      })
+      }).filter(x => x)
     },
   },
   components: {
     Emoji,
   },
+  methods: {
+    imageUrl(emoji) {
+      if (!emoji) return ''
+      const image = this.data.findEmoji(emoji).unified
+      return `https://cdnjs.cloudflare.com/ajax/libs/emoji-datasource-apple/7.0.2/img/apple/64/${image}.png`
+    },
+    emojiObject(emoji) {
+      if (typeof emoji == 'string') {
+        return this.data.findEmoji(emoji)
+      } else {
+        return emoji
+      }
+    },
+  }
 }
 </script>

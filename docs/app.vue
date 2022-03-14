@@ -3,16 +3,6 @@
     <div class="row">
       <h1>Emoji Mart Vue 🏬</h1>
     </div>
-    <div class="row">
-      <emoji :data="index" emoji=":santa::skin-tone-3:" :size="32" />
-      <emoji :data="index" emoji="santa" set="twitter" :size="32" />
-      <emoji :data="index" :emoji="santaEmojiObject" :size="32" />
-    </div>
-
-    <div class="row">
-      <button @click="toggleVisible">Show / hide the picker</button>
-      <button @click="toggleVisible" v-html="smile"></button>
-    </div>
 
     <div class="row">
       <template
@@ -55,128 +45,6 @@
     <div class="row">
       {{ emojisOutput }}
     </div>
-
-    <div class="row-small">
-      <iframe
-        src="https://ghbtns.com/github-btn.html?user=serebrov&repo=emoji-mart-vue&type=star&count=true"
-        frameBorder="0"
-        scrolling="0"
-        width="90px"
-        height="20px"
-      ></iframe>
-    </div>
-
-    <div class="row"></div>
-    <h2>QDialog Example</h2>
-    <div class="row">
-      <q-btn label="Open QDialog" @click="emojiPickerDialog = true" />
-    </div>
-
-    <q-dialog v-model="emojiPickerDialog">
-      <template v-slot:body style="height: 450px">
-        <picker :data="index" :emojiSize="24" :native="true"></picker>
-      </template>
-    </q-dialog>
-
-    <div class="row"></div>
-    <h2>Custom Dialog Example</h2>
-    <div class="row">
-      <button @click="emojiPickerCustomDialog = true">
-        Open Custom Dialog
-      </button>
-    </div>
-
-    <div class="popup" v-if="emojiPickerCustomDialog">
-      <div class="popup-box" @click="emojiPickerCustomDialog = false">
-        <div class="popup-content" @click="$event.stopPropagation()">
-          <div class="popup-close">
-            <a @click="emojiPickerCustomDialog = false">X</a>
-          </div>
-          <h2>Emoji Selector</h2>
-          <picker :data="index" :emojiSize="24" :native="true"></picker>
-        </div>
-      </div>
-    </div>
-
-    <div class="row"></div>
-    <h2>Custom Search And Preview Templates Example</h2>
-    <div class="row">
-      <Picker :data="index" :native="true">
-        <template slot="searchTemplate" slot-scope="slotProps">
-          <input
-            type="text"
-            :placeholder="slotProps.i18n.search"
-            v-on:input="slotProps.onSearch($event.target.value)"
-          />
-        </template>
-        <template slot="previewTemplate" slot-scope="slotProps">
-          <div class="emoji-mart-preview">
-            <div class="emoji-mart-preview-emoji">
-              <Emoji
-                :data="slotProps.data"
-                :emoji="slotProps.emoji ? slotProps.emoji : 'point_up'"
-                :native="slotProps.emojiProps.native"
-                :skin="slotProps.emojiProps.skin"
-                :set="slotProps.emojiProps.set"
-              />
-            </div>
-            <div class="emoji-mart-preview-data">
-              <div class="emoji-mart-preview-name">
-                {{
-                  slotProps.emoji
-                    ? '~' + slotProps.emoji.name + '~'
-                    : 'Choose...'
-                }}
-              </div>
-              <div class="emoji-mart-preview-shortnames">
-                {{ slotProps.emoji ? slotProps.emoji.colons : '' }}
-              </div>
-            </div>
-          </div>
-        </template>
-      </Picker>
-    </div>
-
-    <div class="row"></div>
-    <h2>Filtered picker example</h2>
-    <div class="row" v-show="flagsVisible">
-      <Picker
-        :native="true"
-        emoji="flag-tf"
-        :emojiSize="18"
-        :data="indexFiltered"
-        ref="flags"
-      />
-    </div>
-    <div class="row">
-      <button @click="toggleFlagsVisible">
-        Show / hide the flags picker (with v-show)
-      </button>
-    </div>
-
-    <div class="row"></div>
-    <h2>I18n picker example</h2>
-    <div class="row">
-      <Picker emoji="department_store" :data="indexI18n" :i18n="i18n" />
-    </div>
-
-    <div class="row"></div>
-    <h2>Custom order example</h2>
-    <div class="row">
-      <Picker :data="indexInclude" />
-    </div>
-
-    <div class="row"></div>
-    <h2>Small picker example</h2>
-    <div class="row row-small-picker">
-      <Picker
-        :data="index"
-        :native="native"
-        :set="activeSet"
-        :emojiSize="12"
-        :perLine="5"
-      />
-    </div>
   </div>
 </template>
 
@@ -208,12 +76,9 @@ const CUSTOM_EMOJIS = [
   },
 ]
 
-let index = new EmojiIndex(data, {
-  custom: CUSTOM_EMOJIS,
-})
+let index = new EmojiIndex(data)
 
 let indexFiltered = new EmojiIndex(data, {
-  custom: CUSTOM_EMOJIS,
   emojisToShowFilter: (emoji) => {
     return emoji.short_names[0].match(/^flag.*/) !== null
   },
